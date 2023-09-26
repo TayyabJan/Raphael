@@ -91,8 +91,8 @@
       --tw-backdrop-sepia:
     }
   </style>
-  <link rel="stylesheet" href="./OrQA_files/styles.css" media="all" onload="this.media=&#39;all&#39;"><noscript>
-    <link rel="stylesheet" href="styles.css">
+  <!-- <link rel="stylesheet" href="./OrQA_files/styles.css" media="all" onload="this.media=&#39;all&#39;"><noscript> -->
+    <link rel="stylesheet" href="./styles/orqa_styles.css">
   </noscript>
   <style>
     .ngx-slider .ngx-slider-tick {
@@ -198,19 +198,21 @@
               </div>
             </section>
           </div>
+
         </div><!----><!----><app-footer _ngcontent-vhu-c17="" _nghost-vhu-c5="">
           <div _ngcontent-vhu-c5="" class="clear-both h-20"></div>
           <footer _ngcontent-vhu-c5=""
             class="min-h-[56px] fixed bottom-0 left-0 z-20 w-full bg-teal-600 border-gray-200 px-4 lg:px-6 py-2.5">
             <div _ngcontent-vhu-c5="" class="flex flex-wrap justify-end items-center mx-auto max-w-screen-xl"><!---->
             </div>
+            <div id="response"></div>
           </footer>
         </app-footer>
       </div>
     </app-submit-organ><!----></app-root>
-  <script src="./OrQA_files/runtime.js.download" type="module"></script>
-  <script src="./OrQA_files/polyfills.js.download" type="module"></script>
-  <script src="./OrQA_files/main.js.download" type="module"></script>
+    <script src="./JS/main.js" type="module"></script>
+    <script src="./JS/polyfills.js.download" type="module"></script>
+    <script src="./JS/main.js.download" type="module"></script>
   <script>
     function submitImage() {
       var fileInput = document.getElementById("file_input");
@@ -234,10 +236,34 @@
         // Get the file type
         var fileType = selectedFile.type;
 
+
+
+         // Create a FormData object to send the file
+         const formData = new FormData();
+            formData.append('image', selectedFile);
+
+
+
+             // Send a POST request to the Flask API
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the response from the API
+                const responseDiv = document.getElementById('response');
+                responseDiv.innerHTML = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        
+
         // Display the file type
         // document.getElementById("fileTypeResult").textContent = "File Type: " + fileType;
         alert("Please wait the image is being submitted")
-        window.location.href = "./OrQA_Results.html"
+        window.location.href = "./orqaresults.html"
       } else {
         // No file selected
         document.getElementById("fileTypeResult").textContent = "No file selected.";
