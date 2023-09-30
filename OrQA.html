@@ -92,7 +92,8 @@
     }
   </style>
   <!-- <link rel="stylesheet" href="./OrQA_files/styles.css" media="all" onload="this.media=&#39;all&#39;"><noscript> -->
-    <link rel="stylesheet" href="./styles/orqa_styles.css">
+  <!-- <link rel="stylesheet" href="./styles/orqa_styles.css"> -->
+  <link rel="stylesheet" href="./styles/orqa_styles.css">
   </noscript>
   <style>
     .ngx-slider .ngx-slider-tick {
@@ -167,7 +168,7 @@
               <p _ngcontent-vhu-c17="" class="text-lg">Score organ (beta version)</p>
               <div _ngcontent-vhu-c17="">
                 <p _ngcontent-vhu-c17="" class="block mb-2 text-sm font-medium text-gray-900">Select organ:</p>
-                <form _ngcontent-vhu-c17="" novalidate="" class="ng-untouched ng-pristine ng-valid">
+                <form _ngcontent-vhu-c17="" novalidate=""  class="ng-untouched ng-pristine ng-valid">
                   <ul _ngcontent-vhu-c17=""
                     class="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg sm:flex">
                     <li _ngcontent-vhu-c17="" class="w-full">
@@ -188,9 +189,9 @@
                 </form>
                 <hr _ngcontent-vhu-c17=""><!----><label _ngcontent-vhu-c17="" for="file_input"
                   class="block mb-2 text-sm font-medium text-gray-900 mt-10">Upload image (PNG or JPG):</label><input
-                  _ngcontent-vhu-c17="" id="file_input" type="file"
+                  _ngcontent-vhu-c17="" id="file_input" type="file" name="image"
                   class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
-                <button onclick="submitImage()" _ngcontent-vhu-c17="" type="button"
+                <button  _ngcontent-vhu-c17="" type="button" onclick="submitImage(event)"
                   class="mt-6 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                   Submit </button><!----><!---->
                 <p _ngcontent-vhu-c17=""></p>
@@ -210,69 +211,47 @@
         </app-footer>
       </div>
     </app-submit-organ><!----></app-root>
-    <script src="./JS/main.js" type="module"></script>
-    <script src="./JS/polyfills.js.download" type="module"></script>
-    <script src="./JS/main.js.download" type="module"></script>
+
   <script>
-    function submitImage() {
-      var fileInput = document.getElementById("file_input");
-      var radioButtons = document.getElementsByName('organ');
-      // console.log(radioButtons)
-      if(radioButtons.length>0 && !radioButtons[0].checked && !radioButtons[1].checked  ){
-        alert("Please select Type of Organ first")
+
+    const submitImage = async (event) => {
+
+      const input = document.getElementById('file_input');
+
+      try {
+
+
+        var file = input.files[0];
+        const formData = new FormData();
+        formData.append('image', file);
+        localStorage.setItem('filename', file.name)
+        formData.append('filename', file.name)
+        console.log("Calling ....", formData)
+        const response = await fetch('http://127.0.0.1:5000/upload', {
+          method: 'POST',
+          body: formData,
+        })
+        // .then((response) => response.json())
+        // .then((data) => {
+
+        //     console.log('Image uploaded successfully:', data.message);
+        //     alert(data.message)
+        //     url = `./orqaresults.html?score=${data.message}`
+        //     window.location.href = url
+        // })
+        // .catch((error) => {
+        //     console.error('Error uploading image:', error);
+        //     alert(error)
+        // });
+      
+        url = './orqaresults.html'
+        window.location.href = url
+      } catch (error) {
+        alert(error)
       }
-      else {
-            if(radioButtons[0].checked) {
-              console.log(radioButtons[0].value, " is selected ")
-            }
-            else
-            console.log(radioButtons[1].value, " is selected ")
-      }
-      // Check if a file has been selected
-      if (fileInput.files.length > 0) {
-        // Get the first selected file
-        var selectedFile = fileInput.files[0];
-
-        // Get the file type
-        var fileType = selectedFile.type;
-
-
-
-         // Create a FormData object to send the file
-         const formData = new FormData();
-            formData.append('image', selectedFile);
-
-
-
-             // Send a POST request to the Flask API
-            fetch('/upload', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Display the response from the API
-                const responseDiv = document.getElementById('response');
-                responseDiv.innerHTML = JSON.stringify(data, null, 2);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        
-
-        // Display the file type
-        // document.getElementById("fileTypeResult").textContent = "File Type: " + fileType;
-        alert("Please wait the image is being submitted")
-        window.location.href = "./orqaresults.html"
-      } else {
-        // No file selected
-        document.getElementById("fileTypeResult").textContent = "No file selected.";
-      }
-
-
-
     }
   </script>
+
 </body>
 
 </html>

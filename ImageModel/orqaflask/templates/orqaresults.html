@@ -93,7 +93,7 @@
   </style>
   <!-- <link rel="stylesheet" href="./orqaresults_files/styles.css" media="all" onload="this.media=&#39;all&#39;"><noscript> -->
   <!-- <link rel="stylesheet" href="./styles/orqa_results_styles.css"> -->
-  <link rel="stylesheet" href="./styles/orqa_results_styles.css">
+  <link rel="stylesheet" href="../styles/orqa_results_styles.css">
   </noscript>
   <style>
     .ngx-slider .ngx-slider-tick {
@@ -503,7 +503,7 @@
                   <li _ngcontent-scm-c17=""> mock failing function, failing due to: reason function is failing </li>
                 </ul><!---->
               </div><!---->
-              <div _ngcontent-scm-c17=""><img _ngcontent-scm-c17="" id="inputImg" class="md:w-[100px] w-[850px] mx-auto rounded-md"
+              <div _ngcontent-scm-c17=""><img _ngcontent-scm-c17="" class="md:w-[200px] w-[150px] mx-auto rounded-md"
                   src="">
                 <div _ngcontent-scm-c17=""
                   class="bg-[#7f6153] w-[150px] md:[w-200px] mt-2  h-[50px] mx-auto   rounded-md  items-center justify-center text-center text-white flex text-xs md:text-base "
@@ -716,26 +716,26 @@
                     </ngx-slider-tooltip-wrapper><!----><!----></span><!----></span></ngx-slider>
               <div _ngcontent-scm-c17="" class="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div _ngcontent-scm-c17="" class="mb-4">
-                  <div _ngcontent-scm-c17="" id="None"
+                  <div _ngcontent-scm-c17=""
                     class="opacity-75 max-w-[200px] h-[50px] mx-auto  bg-[#80573e] rounded-md  items-center justify-center text-center text-white flex items-center justify-center text-xs md:text-base">
                     None</div><img _ngcontent-scm-c17="" src="./assets/images/none.jpg"
                     class="opacity-75 mt-1 mx-auto rounded-md w-[200px]">
                 </div>
                 <div _ngcontent-scm-c17="" class="mb-4">
-                  <div _ngcontent-scm-c17="" id="Mild"
+                  <div _ngcontent-scm-c17=""
                     class="opacity-75 max-w-[200px] h-[50px] mx-auto  bg-[#80573e] rounded-md  items-center justify-center text-center text-white flex items-center justify-center text-xs md:text-base">
                     Mild</div><img _ngcontent-scm-c17="" src="./assets/images/mild.jpg"
                     class="opacity-75 mt-1 mx-auto rounded-md w-[200px]">
                 </div>
                 <div _ngcontent-scm-c17="" class="mb-4">
-                  <div _ngcontent-scm-c17="" id="Moderate"
-                    class="shadow-2xl max-w-[200px]  mx-auto  border-primary-600 h-[50px]  bg-[#8e6240] rounded-md  items-center justify-center text-center text-white flex items-center justify-center text-xs md:text-base">
+                  <div _ngcontent-scm-c17=""
+                    class="shadow-2xl max-w-[200px]  mx-auto border-4 border-primary-600 h-[50px]  bg-[#8e6240] rounded-md  items-center justify-center text-center text-white flex items-center justify-center text-xs md:text-base">
                     <p _ngcontent-scm-c17="" class="text-white">Moderate</p>
                   </div><img _ngcontent-scm-c17="" src="./assets/images/mod.jpg"
                     class="mt-1 mx-auto rounded-md w-[200px]">
                 </div>
                 <div _ngcontent-scm-c17="" class="mb-4">
-                  <div _ngcontent-scm-c17="" id="Severe"
+                  <div _ngcontent-scm-c17=""
                     class="opacity-75 max-w-[200px] h-[50px] mx-auto  bg-[#80573e] rounded-md  items-center justify-center text-center text-white flex items-center justify-center text-xs md:text-base">
                     <p _ngcontent-scm-c17="" class="text-white">Severe</p>
                   </div><img _ngcontent-scm-c17="" src="./assets/images/severe.jpg"
@@ -1029,21 +1029,11 @@
 
       try {
         console.log("Printing at results")
-              var filename = localStorage.getItem('filename')
-              var InputImage = document.getElementById('inputImg')
-              // InputImage.src = `ImageModel/orqaflask/uploads/${filename}`
-              InputImage.src = "ImageModel\\orqaflask\\uploads\\"+ filename
-              var None_dive = document.getElementById('None')
-              var Mild_dive = document.getElementById('Mild')
-              var Moderate_dive = document.getElementById('Moderate')
-              var Severe_dive = document.getElementById('Severe')
-        
-        
-        
+        var filename = localStorage.getItem('filename')
+        alert(filename)
         const formData1 = new FormData();
+
         formData1.append('filename', filename)
-
-
 
         const response2 = await fetch('http://127.0.0.1:5000/process', {
           method: 'POST',
@@ -1051,40 +1041,12 @@
         })
           .then((response) => response.json())
           .then((data) => {
-            var Score = data.message
-            
-            if (Score <= 1) {
-              None_dive.style.border = 'solid #0D9488 6px'
-              console.log("first")
-            }
 
-            else if (Score <= 2) {
-              console.log("second")
-               
-              console.log(Mild_dive)
-              // Mild_dive.classList.add('border-4')
-              Mild_dive.style.border = 'solid #0D9488 6px'
-            }
-
-            else if (Score <= 3) {
-              console.log("third")
-           
-              Moderate_dive.style.border = 'solid #0D9488 6px'
-            }
-
-            else if (Score <= 4) {
-              console.log("fourth")
-              Severe_dive.style.border = 'solid #0D9488 6px'
-            }
-
-
-            
             console.log('Results:', data.message);
-
-
+            alert(data.message)
             // const myUrl2 = new URL(window.location.toLocaleString()).searchParams;
             // console.log(myUrl2.get('score'))
-            document.getElementById("score_results").innerHTML = data.message
+            document.getElementById("score_results").innerHTML= data.message
           })
           .catch((error) => {
             console.error('Error uploading image:', error);
@@ -1098,7 +1060,6 @@
 
     }
     processModel();
-
     function GoToMain() {
       window.location.href = './orqa.html'
     }
