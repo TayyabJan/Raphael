@@ -40,6 +40,8 @@ application: this function is applied to all images in the dataset following the
 and the output is combined into a numpy ndarray with columns representing the features and rows representing the images
 '''
 
+# Functions
+
 
 def collect_data(ycoordinatepixels, xcoordinatepixels, data, hlen, wlen):
     count = 0
@@ -121,9 +123,7 @@ def is_not_liver(luminosity, redgreen, blueyellow, minluminosity, maxluminosity,
 
 def stats(variable, array):
     # Welford
-    # #array[0] = number
-    # array[2] = mean
-    # stdev = (array[4]/array[0]) ** 0.5
+
     array[0] = array[0] + 1
     array[1] = variable - array[2]
     array[2] = array[2] + (array[1] / array[0])
@@ -134,8 +134,7 @@ def stats(variable, array):
 
 
 def feature_extraction(Starting_liver_img):
-    red2_s, green2_s, blue2_s, luminosity_s, redgreen_s, blueyellow_s = [], [], [], [], [], []
-
+    red3, green3, blue3, luminosity, redgreen, blueyellow = [], [], [], [], [], []
     # Convert from RGB to RGBA so code is compatible with rembg
     Starting_liver_img = Starting_liver_img.convert("RGBA")
     data = asarray(Starting_liver_img)  # read only image data
@@ -179,6 +178,8 @@ def feature_extraction(Starting_liver_img):
         ycoordiatepixels = random.randint(uboundy, lboundy)
         red1, green1, blue1 = collect_data(ycoordiatepixels, xcoordinatepixels, data, hlen, wlen)
 
+        # print(str(k) + ', ' + str(red1) + ', ' + str(green1) + ', ' + str(blue1))
+
         luminosity = red1 + green1 + blue1
         redgreen = int(log10((green1 + blue1) / (2 * red1)) * 1000)
         blueyellow = int(log10((2 * blue1) / (red1 + green1)) * 1000)
@@ -206,6 +207,8 @@ def feature_extraction(Starting_liver_img):
         if blue1 / luminosity > 0.4:
             is_initial_backgroundestimate = True
 
+        # print('is background = ' + str(is_initial_backgroundestimate))
+
         if is_initial_backgroundestimate == False:
 
             if luminosity >= 150 and luminosity <= 233:
@@ -231,6 +234,10 @@ def feature_extraction(Starting_liver_img):
                 CIELABLumNumber = CIELABLumNumber + 1
                 CIELABBYTotal = CIELABBYTotal + CIELABBY
                 CIELABBYNumber = CIELABBYNumber + 1
+
+            # print('CIELABLum and CIELABBY = ' + str(CIELABLum) + ', ' + str(CIELABBY))
+
+        # next k
 
     if CIELABLumNumber > 0:
         CIELABLumAverage = CIELABLumTotal / CIELABLumNumber
@@ -274,7 +281,10 @@ def feature_extraction(Starting_liver_img):
     blue2 = 0
     count2 = 0
 
-    luminosity, redgreen, blueyellow = 0, 0, 0
+    saturation2 = 0
+
+    # Estimate Luminosiy, redgreen and blueyellow values for this liver by sampling regions that are not background and are not 'not_liver'
+
     for pas in range(1, 6):
 
         if pas > 1:
@@ -314,27 +324,25 @@ def feature_extraction(Starting_liver_img):
             xcoordinatepixels = random.randint(lboundx, rboundx)
             ycoordiatepixels = random.randint(uboundy, lboundy)
 
-            if is_background(ycoordiatepixels, xcoordinatepixels,
-                             data):  # Look at first random pixel. Is it background?
-                data_modified[ycoordiatepixels:ycoordiatepixels + hlen, xcoordinatepixels:xcoordinatepixels + hlen] = \
-                    [0, 0, 255, 255]  # If bg try again
+            if is_background(ycoordiatepixels, xcoordinatepixels, data):  # Look at first random pixel. Is it background?
+                data_modified[ycoordiatepixels:ycoordiatepixels + hlen, xcoordinatepixels:xcoordinatepixels + hlen] = [0, 0,
+                                                                                                                       255,
+                                                                                                                       255]  # If bg try again
                 # print('miss -  not foreground')
             else:
-                red1, green1, blue1 = collect_data(ycoordiatepixels, xcoordinatepixels, data, hlen,
-                                                   wlen)  # if foreground measure RMS RGB for sample square
+                red1, green1, blue1 = collect_data(ycoordiatepixels,
+                                                   xcoordinatepixels, data, hlen, wlen)  # if foreground measure RMS RGB for sample square
                 luminosity = (red1 + green1 + blue1)  # calculate luminosity, R-G and B-Y values
                 redgreen = int(log10((green1 + blue1) / (2 * red1)) * 1000)
                 blueyellow = int(log10((2 * blue1) / (red1 + green1)) * 1000)
 
                 if is_not_liver(luminosity, redgreen, blueyellow, minluminosity, maxluminosity, minredgreen,
                                 maxredgreen, minblueyellow, maxblueyellow):  # Is it liver?
-                    data_modified[ycoordiatepixels:ycoordiatepixels + hlen,
-                    xcoordinatepixels:xcoordinatepixels + hlen] = [
+                    data_modified[ycoordiatepixels:ycoordiatepixels + hlen, xcoordinatepixels:xcoordinatepixels + hlen] = [
                         255, 0, 0, 255]
                     # print("miss - not liver")
                 else:
-                    data_modified[ycoordiatepixels:ycoordiatepixels + hlen,
-                    xcoordinatepixels:xcoordinatepixels + hlen] = [
+                    data_modified[ycoordiatepixels:ycoordiatepixels + hlen, xcoordinatepixels:xcoordinatepixels + hlen] = [
                         0, (50 * pas), 0, 255]
                     # print("pas = " + str(pas) + " k = " + str(k) + " red1 = " + str(red1) + " green1 = " + str(green1) + " blue1 = " + str(blue1))
 
@@ -344,33 +352,32 @@ def feature_extraction(Starting_liver_img):
 
                     if pas == 5:
                         red2 = red2 + red1
-                        red2_s.append(red2)
                         green2 = green2 + green1
-                        green2_s.append(green2)
                         blue2 = blue2 + blue1
-                        blue2_s.append(blue2)
                         count2 = count2 + 1
-                        luminosity = (red1 + green1 + blue1)  # calculate luminosity, R-G and B-Y values
-                        luminosity_s.append(luminosity)
-                        redgreen = int(log10((green1 + blue1) / (2 * red1)) * 1000)
-                        redgreen_s.append(redgreen)
-                        blueyellow = int(log10((2 * blue1) / (red1 + green1)) * 1000)
-                        blueyellow_s.append(blueyellow)
 
                 minx = min(minx, xcoordinatepixels)
                 miny = min(miny, ycoordiatepixels)
                 maxx = max(maxx, xcoordinatepixels)
                 maxy = max(maxy, ycoordiatepixels)
-    if len(red2_s) == 0 or len(green2_s) == 0 or len(blue2_s) == 0 or len(luminosity_s) == 0 or len(redgreen_s) == 0 \
-            or len(blueyellow_s) == 0:
+
+        # Next k
+
+        if pas == 5:
+            # results and saturation
+            if count2 == 0:
+                return None
+            red3 = round(red2 / count2)
+            green3 = round(green2 / count2)
+            blue3 = round(blue2 / count2)
+
+            luminosity = (red3 + green3 + blue3)  # calculate luminosity, R-G and B-Y values
+            redgreen = int(log10((green3 + blue3) / (2 * red3)) * 1000)
+            blueyellow = int(log10((2 * blue3) / (red3 + green3)) * 1000)
+    if red3 == green3 == blue3 == luminosity == redgreen == blueyellow == 0:
         return None
-    red2_s = np.max(red2_s)
-    green2_s = np.max(green2_s)
-    blue2_s = np.max(blue2_s)
-    luminosity_s = np.max(luminosity_s)
-    redgreen_s = np.max(redgreen_s)
-    blueyellow_s = np.max(blueyellow_s)
-    return np.asarray([red2_s, green2_s, blue2_s, luminosity_s, redgreen_s, blueyellow_s])
+    return np.asarray([red3, green3, blue3, luminosity, redgreen, blueyellow])
+
 
 
 '''
@@ -404,3 +411,17 @@ def test_model(features_test, model):
     scores = model.predict(features_test)
     return scores
 
+
+# #     # Next pas
+# from PIL import Image
+# file = 'D:/orqa_data/Liver images (NORIS)/image59.jpg'
+# import os
+# # check if the input image is exist
+# if not os.path.isfile(file):
+#     print(file, ' Not exist')
+#     exit()
+# # Extract texture features
+# liver_img = Image.open(file)
+# # extract features
+# fea = feature_extraction(liver_img)
+# print(fea)

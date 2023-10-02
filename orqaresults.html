@@ -490,20 +490,20 @@
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 ng-untouched ng-pristine ng-valid"><label
                     _ngcontent-scm-c17="" for="default-radio-1"
                     class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">colour RFR model</label></div>
-                <div _ngcontent-scm-c17="" class="flex items-center mb-4"><input _ngcontent-scm-c17=""
+                <!-- <div _ngcontent-scm-c17="" class="flex items-center mb-4"><input _ngcontent-scm-c17=""
                     formcontrolname="selectedModel" id="horizontal-list-radio-license" name="selectedModel" type="radio"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 ng-untouched ng-pristine ng-valid"><label
                     _ngcontent-scm-c17="" for="default-radio-1"
-                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">texture RFR model</label></div>
+                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">texture RFR model</label></div> -->
                 <!---->
               </form>
               <div _ngcontent-scm-c17="">
-                <p _ngcontent-scm-c17="" class="italic">Failing models</p>
+                <!-- <p _ngcontent-scm-c17="" class="italic">Failing models</p> -->
                 <ul _ngcontent-scm-c17="" class="list-disc">
-                  <li _ngcontent-scm-c17=""> mock failing function, failing due to: reason function is failing </li>
+                  <!-- <li _ngcontent-scm-c17=""> mock failing function, failing due to: reason function is failing </li> -->
                 </ul><!---->
-              </div><!---->
-              <div _ngcontent-scm-c17=""><img _ngcontent-scm-c17="" id="inputImg" class="md:w-[100px] w-[850px] mx-auto rounded-md"
+              </div>
+              <div _ngcontent-scm-c17=""><img _ngcontent-scm-c17="" id="inputImg" class="md:w-[150px] w-[150px] mx-auto rounded-md"
                   src="">
                 <div _ngcontent-scm-c17=""
                   class="bg-[#7f6153] w-[150px] md:[w-200px] mt-2  h-[50px] mx-auto   rounded-md  items-center justify-center text-center text-white flex text-xs md:text-base "
@@ -758,10 +758,10 @@
                   </li>
                   <li _ngcontent-scm-c17="" class="w-full">
                     <div _ngcontent-scm-c17="" class="flex items-center pl-3"><input _ngcontent-scm-c17=""
-                        formcontrolname="agreeWithScore" id="horizontal-list-radio-license" type="radio" value="no"
+                        formcontrolname="agreeWithScore" id="horizontal-list-radio-license_No" type="radio" value="no"
                         name="agreeWithScore"
                         class="accent-secondary-600 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 ng-untouched ng-pristine ng-valid"><label
-                        _ngcontent-scm-c17="" for="horizontal-list-radio-license"
+                        _ngcontent-scm-c17="" for="horizontal-list-radio-license_No"
                         class="w-full py-3 ml-2 text-sm font-medium text-gray-900">No</label></div>
                   </li>
                 </ul>
@@ -1078,6 +1078,8 @@
             }
 
 
+            
+            console.log('Results:', data);
             
             console.log('Results:', data.message);
 
