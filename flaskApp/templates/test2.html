@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    
+    <form id="myForm">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"><br>
+        <!-- <input id="file_input" type="file" name="image" onchange="ProcessImage()"> -->
+        <input id="file_input" type="file" name="image" >
+        <img id="Image_Source"  width="100px" height="100px" />
+        <input type="submit" value="Submit">
+    </form>
+    <script>
+
+// const ProcessImage = () => {
+//           const input = document.getElementById('file_input');
+//           const Source_image = document.getElementById('Image_Source');
+    
+    
+    
+//           var file = input.files[0];
+    
+//           var reader = new FileReader();
+//           reader.onload = function () {
+//             // Convert the file contents to a base64 string
+//             base64String = reader.result.split(',')[1];
+    
+//             // Set the src attribute to the base64 string
+//             Source_image.src = 'data:image/png;base64,' + base64String;
+    
+//           };
+    
+//           // Read the file as a data URL
+//           reader.readAsDataURL(file);
+//         }
+
+        // $(document).ready(function(){
+        //     $('#myForm').on('submit', function(e) {
+        //         e.preventDefault();
+        //         $.ajax({
+        //             url : 'http://127.0.0.1:5000/submit_form',
+        //             type : 'POST',
+        //             data : $('#myForm').serialize(),
+        //             success : function(response) {
+        //                 alert(response);
+        //             }
+        //         });
+        //     });
+        // });
+
+    //     $('#myForm').on('submit', function(e) {
+    // e.preventDefault();
+    // var formData = new FormData(this);
+    // $.ajax({
+    //     url: 'http://127.0.0.1:5000/submit_form',
+    //     type: 'POST',
+    //     data: formData,
+    //     processData: false,
+    //     contentType: false,
+    //     success: function(response) {
+    //         // Handle the response here
+    //         console.log(response);
+    //     },
+    //     error: function(jqXHR, textStatus, errorThrown) {
+    //         // Handle the error here
+    //         console.log(textStatus, errorThrown);
+    //     }
+    // });
+    // });
+
+    $('#myForm').on('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting via the browser
+    var formData = new FormData(this);
+    $.post({
+        url: 'http://127.0.0.1:5000/submit_form',
+        data: formData,
+        processData: false,  // tell jQuery not to process the data
+        contentType: false,  // tell jQuery not to set contentType
+        success: function(data) {
+            alert(data);
+            console.log(data)
+        }
+    });
+});
+
+
+
+
+        // $(document).ready(function(){
+        //     $('#myForm').on('submit', function(e) {
+        //         e.preventDefault();
+        //         $.ajax({
+        //             url : 'http://127.0.0.1:5000/submit_form2',
+        //             type : 'POST',
+        //             data : $('#myForm').serialize(),
+        //             success : function(response) {
+        //                 alert(response);
+        //             }
+        //         });
+        //     });
+        // });
+        </script>
+</body>
+</html>
